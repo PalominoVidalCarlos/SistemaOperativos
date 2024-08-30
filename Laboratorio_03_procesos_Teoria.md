@@ -44,6 +44,7 @@ sudo apt install build-essential
 ### Código de ejemplo en C
 
 ```c
+#include <stdio.h>
 #include <unistd.h>
 
 int main() {
@@ -91,6 +92,7 @@ El `exec()` en C es una familia de funciones que reemplazan el espacio de direcc
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/wait.h>
 
 int main() {
     pid_t pid;
@@ -104,7 +106,7 @@ int main() {
         exit(1);
     } else if (pid == 0) {
         // Estamos en el proceso hijo
-        printf("Proceso hijo (PID: %d) a punto de ejecutar 'ls' con execvp...\\n", getpid());
+        printf("Proceso hijo (PID: %d) a punto de ejecutar 'ls' con execvp...\n", getpid());
 
         // Un arreglo con los argumentos para execvp. El primer argumento es el programa.
         // El último argumento debe ser NULL para indicar el fin del arreglo.
@@ -118,9 +120,9 @@ int main() {
         exit(1);
     } else {
         // Estamos en el proceso padre
-        printf("Proceso padre (PID: %d) esperando a que el hijo termine...\\n", getpid());
+        printf("Proceso padre (PID: %d) esperando a que el hijo termine...\n", getpid());
         wait(NULL); // Esperar a que termine el proceso hijo
-        printf("Proceso hijo terminó la ejecución.\\n");
+        printf("Proceso hijo terminó la ejecución.\n");
     }
 
     return 0;
@@ -155,8 +157,8 @@ Un ejemplo de cómo capturar la señal SIGINT (generalmente generada por la comb
 
 // Esta es la función de manejo de señales que se llamará cuando se reciba SIGINT
 void handle_sigint(int sig) {
-    printf("Capturada señal SIGINT: %d\\n", sig);
-    printf("Pero no voy a terminar!\\n");
+    printf("\nCapturada señal SIGINT: %d\n", sig);
+    printf("Pero no voy a terminar!\n");
     // Aquí se podrían liberar recursos o realizar una limpieza si fuera necesario
 }
 
@@ -169,7 +171,7 @@ int main() {
 
     // Un bucle infinito que mantendrá vivo el proceso hasta que se reciba una señal
     while (1) {
-        printf("Esperando señal...\\n");
+        printf("Esperando señal...\n");
         sleep(2); // Dormir por dos segundos para evitar una salida demasiado rápida
     }
 
@@ -212,10 +214,10 @@ int main() {
 
     if (pid > 0) {
         // Proceso padre
-        printf("Proceso padre: PID = %d, PID del hijo = %d\\n", getpid(), pid);
+        printf("Proceso padre: PID = %d, PID del hijo = %d\n", getpid(), pid);
         sleep(5); // Darle tiempo al hijo para que haga algo
 
-        printf("Proceso padre: Enviando SIGTERM al proceso hijo\\n");
+        printf("Proceso padre: Enviando SIGTERM al proceso hijo\n");
         if (kill(pid, SIGTERM) == -1) {
             perror("kill");
             exit(1);
@@ -223,7 +225,7 @@ int main() {
     } else {
         // Proceso hijo
         while(1) {
-            printf("Proceso hijo: PID = %d, trabajando...\\n", getpid());
+            printf("Proceso hijo: PID = %d, trabajando...\n", getpid());
             sleep(1); // Simula hacer algo
         }
     }
